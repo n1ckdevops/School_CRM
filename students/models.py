@@ -12,11 +12,14 @@ class Student(models.Model):
     age = models.IntegerField(default=0)
     teacher = models.ForeignKey("Teacher", on_delete=models.CASCADE)
 
+    def __str__(self):
+        return f'{self.first_name} {self.last_name}'
 
 class Teacher(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
-
+    def __str__(self):
+        return self.user.username
     # paid = models.BooleanField(default=False)
     # source = models.CharField(choices=SOURCE_CHOICES, max_length=100)
     #

@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>CRM</title>
+
+    <style>
+        .student {
+            padding: 10px 6px;
+            margin-top: 10px;
+            background-color: #3c91cf;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <h1>There are all of our students</h1>
+    {% for student in students %}
+        <div class="student">
+            <a href="/students/{{ student.pk }}/">{{ student.first_name }} {{ student.last_name }}.
+        </div>
+    {% endfor %}
+</body>
+</html>

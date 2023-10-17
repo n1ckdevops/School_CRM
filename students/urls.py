@@ -7,5 +7,5 @@ app_name = 'students'
 urlpatterns = [
     path('', student_list),
     path('<int:pk>/', student_detail),
-    path('create', student_create)
+    path('create/', student_create)
 ]

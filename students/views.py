@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 
-from .forms import StudentForm
+from .forms import StudentForm, StudentModelForm
 from .models import Student, Teacher
 
 
@@ -22,25 +22,40 @@ def student_detail(request, pk):
 
 
 def student_create(request):
+    form = StudentModelForm()
     if request.method == 'POST':
         print("Receiving a post method")
-        form = StudentForm(request.POST)
+        form = StudentModelForm(request.POST)
         if form.is_valid():
-            print('the form is valid')
-            print(form.cleaned_data)
-            first_name = form.cleaned_data['first_name']
-            last_name = form.cleaned_data['last_name']
-            age = form.cleaned_data['age']
-            teacher = Teacher.objects.first()
-            Student.objects.create(
-                first_name=first_name,
-                last_name=last_name,
-                age=age,
-                teacher=teacher
-            )
-            print('Student has been created!')
+            form.save()
             return redirect('/students')
     context = {
-        'form': form
+        'form': form,
     }
     return render(request, 'students/student_create.html', context)
+
+
+# def student_create(request):
+#     form = StudentModelForm()
+#     if request.method == 'POST':
+#         print("Receiving a post method")
+#         form = StudentModelForm(request.POST)
+#         if form.is_valid():
+#             print('the form is valid')
+#             print(form.cleaned_data)
+#             first_name = form.cleaned_data['first_name']
+#             last_name = form.cleaned_data['last_name']
+#             age = form.cleaned_data['age']
+#             teacher = Teacher.objects.first()
+#             Student.objects.create(
+#                 first_name=first_name,
+#                 last_name=last_name,
+#                 age=age,
+#                 teacher=teacher
+#             )
+#             print('Student has been created!')
+#             return redirect('/students')
+#     context = {
+#         'form': form,
+#     }
+#     return render(request, 'students/student_create.html', context)

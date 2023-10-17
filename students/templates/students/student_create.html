@@ -11,8 +11,12 @@
 </head>
 <body>
 <a href="/students">Go back to students</a>
-<hr>
-<h1>This is the details of {{ student.first_name }}</h1>
-<p>This persons age: {{ student.age }}</p>
+<hr />
+<h1>Create a new student</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Submit</button>
+</form>
 </body>
 </html>

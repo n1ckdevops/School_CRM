@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 
-from .forms import StudentModelForm, StudentForm
+from .forms import StudentModelForm
 from .models import Student
 
 
@@ -48,6 +48,12 @@ def student_update(request, pk):
         'student': student,
     }
     return render(request, 'students/student_update.html', context)
+
+
+def student_delete(request, pk):
+    student = Student.objects.get(id=pk)
+    student.delete()
+    return redirect('/students')
 
 # def student_update(request, pk):
 #     student = Student.objects.get(id=pk)

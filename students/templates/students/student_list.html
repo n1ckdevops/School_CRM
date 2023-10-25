@@ -17,12 +17,12 @@
     </style>
 </head>
 <body>
-<a href="/students/create">Create a new student</a>
+<a href="{% url 'students:student-create' %}">Create a new student</a>
 <hr>
 <h1>There are all of our students</h1>
 {% for student in students %}
 <div class="student">
-    <a href="/students/{{ student.pk }}/">{{ student.first_name }} {{ student.last_name }}
+    <a href="{% url 'students:student-detail' student.pk %}">{{ student.first_name }} {{ student.last_name }}
 </div>
 {% endfor %}
 </body>

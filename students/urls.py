@@ -5,10 +5,10 @@ from .views import student_create, student_list, student_detail, student_update,
 app_name = 'students'
 
 urlpatterns = [
-    path('', student_list),
-    path('<int:pk>/', student_detail),
-    path('<int:pk>/update/', student_update),
-    path('<int:pk>/delete/', student_delete),
-    path('create/', student_create)
+    path('', student_list, name='student-list'),
+    path('<int:pk>/', student_detail, name='student-detail'),
+    path('<int:pk>/update/', student_update, name='student-update'),
+    path('<int:pk>/delete/', student_delete, name='student-delete'),
+    path('create/', student_create, name='student-create')
 
 ]

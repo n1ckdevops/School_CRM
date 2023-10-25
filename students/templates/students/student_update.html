@@ -10,7 +10,7 @@
 
 </head>
 <body>
-<a href="/students">Go back to students</a>
+<a href="{% url 'students:student-detail' student.pk %}">Go back to {{ student.first_name }} {{ student.last_name }}</a>
 <hr />
 <h1>Update student {{ student.first_name }} {{ student.last_name }}</h1>
 <form method="post">

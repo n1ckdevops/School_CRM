@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 
-from .forms import StudentForm, StudentModelForm
-from .models import Student, Teacher
+from .forms import StudentModelForm, StudentForm
+from .models import Student
 
 
 def student_list(request):
@@ -34,6 +34,43 @@ def student_create(request):
     }
     return render(request, 'students/student_create.html', context)
 
+
+def student_update(request, pk):
+    student = Student.objects.get(id=pk)
+    form = StudentModelForm(instance=student)
+    if request.method == 'POST':
+        form = StudentModelForm(request.POST, instance=student)
+        if form.is_valid():
+            form.save()
+            return redirect('/students')
+    context = {
+        'form': form,
+        'student': student,
+    }
+    return render(request, 'students/student_update.html', context)
+
+# def student_update(request, pk):
+#     student = Student.objects.get(id=pk)
+#     form = StudentForm()
+#     if request.method == 'POST':
+#         print("Receiving a post method")
+#         form = StudentForm(request.POST)
+#         if form.is_valid():
+#             first_name = form.cleaned_data['first_name']
+#             last_name = form.cleaned_data['last_name']
+#             age = form.cleaned_data['age']
+#             student.first_name = first_name
+#             student.last_name = last_name
+#             student.age = age
+#             student.save()
+#             print('Student has been created!')
+#             return redirect('/students')
+#     context = {
+#         'student': student,
+#         'form': form,
+#
+#     }
+#     return render(request, 'students/student_update.html', context)
 
 # def student_create(request):
 #     form = StudentModelForm()

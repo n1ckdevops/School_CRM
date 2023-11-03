@@ -5,19 +5,18 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
+
     <title>School CRM</title>
-    <style>
-        .student {
-            padding: 10px 6px;
-            margin-top: 10px;
-            background-color: rgba(60, 145, 207, 0.07);
-            width: 100%;
-        }
-    </style>
+
 </head>
 <body>
+<div class="max-w-7xl mx-auto">
+    {% include "navbar.html" %}
     {% block content %}
     {% endblock content %}
     {% include "scripts.html" %}
+</div>
+
 </body>
 </html>

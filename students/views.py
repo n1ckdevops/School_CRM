@@ -4,6 +4,8 @@ from .forms import StudentModelForm
 from .models import Student
 
 
+def landing_page(request):
+    return render(request, 'landing.html')
 def student_list(request):
     students = Student.objects.all()
     context = {

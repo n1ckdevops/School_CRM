@@ -1,17 +1,38 @@
-from django.shortcuts import render, redirect
-
+from django.shortcuts import render, redirect, reverse
+from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView,DeleteView
 from .forms import StudentModelForm
 from .models import Student
 
 
+# CRUD+L - CREATE, RETRIEVE, UPDATE AND DELETE + LIST
+
+
+class LandingPageView(TemplateView):
+    template_name = 'landing.html'
+
+
 def landing_page(request):
     return render(request, 'landing.html')
+
+
+class StudentListView(ListView):
+    template_name = 'students/student_list.html'
+    queryset = Student.objects.all()
+    context_object_name = 'students'
+
+
 def student_list(request):
     students = Student.objects.all()
     context = {
         'students': students
     }
     return render(request, 'students/student_list.html', context)
+
+
+class StudentDetailView(DetailView):
+    template_name = 'students/student_detail.html'
+    queryset = Student.objects.all()
+    context_object_name = 'student'
 
 
 def student_detail(request, pk):
@@ -21,6 +42,14 @@ def student_detail(request, pk):
 
     }
     return render(request, 'students/student_detail.html', context)
+
+
+class StudentCreateView(CreateView):
+    template_name = 'students/student_create.html'
+    form_class = StudentModelForm
+
+    def get_success_url(self):
+        return reverse('students:student-list')
 
 
 def student_create(request):
@@ -37,6 +66,15 @@ def student_create(request):
     return render(request, 'students/student_create.html', context)
 
 
+class StudentUpdateView(UpdateView):
+    template_name = 'students/student_update.html'
+    form_class = StudentModelForm
+    queryset = Student.objects.all()
+
+    def get_success_url(self):
+        return reverse('students:student-list')
+
+
 def student_update(request, pk):
     student = Student.objects.get(id=pk)
     form = StudentModelForm(instance=student)
@@ -51,6 +89,12 @@ def student_update(request, pk):
     }
     return render(request, 'students/student_update.html', context)
 
+
+class StudentDeleteView(DeleteView):
+    template_name = 'students/student_delete.html'
+    queryset = Student.objects.all()
+    def get_success_url(self):
+        return reverse('students:student-list')
 
 def student_delete(request, pk):
     student = Student.objects.get(id=pk)

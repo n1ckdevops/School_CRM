@@ -1,10 +1,10 @@
 from django.contrib import admin
 from django.urls import path, include
 
-from students.views import landing_page
+from students.views import LandingPageView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', landing_page, name='landing-page'),
+    path('', LandingPageView.as_view(), name='landing-page'),
     path('students/', include('students.urls', namespace='students'))
 ]

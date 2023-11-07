@@ -12,3 +12,4 @@ urlpatterns = [
     path('create/', StudentCreateView.as_view(), name='student-create')
 
 ]
+

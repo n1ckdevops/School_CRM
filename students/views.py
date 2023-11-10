@@ -1,5 +1,7 @@
+from django.core.mail import send_mail
 from django.shortcuts import render, redirect, reverse
-from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView,DeleteView
+from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
+
 from .forms import StudentModelForm
 from .models import Student
 
@@ -51,6 +53,16 @@ class StudentCreateView(CreateView):
     def get_success_url(self):
         return reverse('students:student-list')
 
+    def form_valid(self, form):
+        # TODO send email
+        send_mail(
+            subject='A student has been created',
+            message='Go to the site to see the new student',
+            from_email='test@test.com',
+            recipient_list=['test2@test.com']
+        )
+        return super(StudentCreateView, self).form_valid(form)
+
 
 def student_create(request):
     form = StudentModelForm()
@@ -93,8 +105,10 @@ def student_update(request, pk):
 class StudentDeleteView(DeleteView):
     template_name = 'students/student_delete.html'
     queryset = Student.objects.all()
+
     def get_success_url(self):
         return reverse('students:student-list')
+
 
 def student_delete(request, pk):
     student = Student.objects.get(id=pk)

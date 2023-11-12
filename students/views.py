@@ -1,15 +1,22 @@
 from django.core.mail import send_mail
 from django.shortcuts import render, redirect, reverse
-from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views import generic
 
-from .forms import StudentModelForm
+from .forms import StudentModelForm, CustomUserCreationForm
 from .models import Student
 
 
 # CRUD+L - CREATE, RETRIEVE, UPDATE AND DELETE + LIST
 
+class SignupView(generic.CreateView):
+    template_name = 'registration/signup.html'
+    form_class = CustomUserCreationForm
 
-class LandingPageView(TemplateView):
+    def get_success_url(self):
+        return reverse('login')
+
+
+class LandingPageView(generic.TemplateView):
     template_name = 'landing.html'
 
 
@@ -17,7 +24,7 @@ def landing_page(request):
     return render(request, 'landing.html')
 
 
-class StudentListView(ListView):
+class StudentListView(generic.ListView):
     template_name = 'students/student_list.html'
     queryset = Student.objects.all()
     context_object_name = 'students'
@@ -31,7 +38,7 @@ def student_list(request):
     return render(request, 'students/student_list.html', context)
 
 
-class StudentDetailView(DetailView):
+class StudentDetailView(generic.DetailView):
     template_name = 'students/student_detail.html'
     queryset = Student.objects.all()
     context_object_name = 'student'
@@ -46,7 +53,7 @@ def student_detail(request, pk):
     return render(request, 'students/student_detail.html', context)
 
 
-class StudentCreateView(CreateView):
+class StudentCreateView(generic.CreateView):
     template_name = 'students/student_create.html'
     form_class = StudentModelForm
 
@@ -78,7 +85,7 @@ def student_create(request):
     return render(request, 'students/student_create.html', context)
 
 
-class StudentUpdateView(UpdateView):
+class StudentUpdateView(generic.UpdateView):
     template_name = 'students/student_update.html'
     form_class = StudentModelForm
     queryset = Student.objects.all()
@@ -102,7 +109,7 @@ def student_update(request, pk):
     return render(request, 'students/student_update.html', context)
 
 
-class StudentDeleteView(DeleteView):
+class StudentDeleteView(generic.DeleteView):
     template_name = 'students/student_delete.html'
     queryset = Student.objects.all()
 

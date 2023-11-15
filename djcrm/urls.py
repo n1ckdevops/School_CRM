@@ -2,9 +2,8 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
-
-from students.views import LandingPageView, SignupView
 from django.contrib.auth.views import LoginView, LogoutView
+from students.views import LandingPageView, SignupView
 
 
 urlpatterns = [

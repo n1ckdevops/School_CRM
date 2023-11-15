@@ -121,3 +121,5 @@ AUTH_USER_MODEL = 'students.User'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 LOGIN_REDIRECT_URL = '/students'
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

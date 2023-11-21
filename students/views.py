@@ -1,7 +1,7 @@
 from django.core.mail import send_mail
 from django.shortcuts import render, redirect, reverse
 from django.views import generic
-
+from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import StudentModelForm, CustomUserCreationForm
 from .models import Student
 
@@ -24,7 +24,7 @@ def landing_page(request):
     return render(request, 'landing.html')
 
 
-class StudentListView(generic.ListView):
+class StudentListView(LoginRequiredMixin, generic.ListView):
     template_name = 'students/student_list.html'
     queryset = Student.objects.all()
     context_object_name = 'students'
@@ -38,7 +38,7 @@ def student_list(request):
     return render(request, 'students/student_list.html', context)
 
 
-class StudentDetailView(generic.DetailView):
+class StudentDetailView(LoginRequiredMixin, generic.DetailView):
     template_name = 'students/student_detail.html'
     queryset = Student.objects.all()
     context_object_name = 'student'
@@ -53,7 +53,7 @@ def student_detail(request, pk):
     return render(request, 'students/student_detail.html', context)
 
 
-class StudentCreateView(generic.CreateView):
+class StudentCreateView(LoginRequiredMixin, generic.CreateView):
     template_name = 'students/student_create.html'
     form_class = StudentModelForm
 
@@ -85,7 +85,7 @@ def student_create(request):
     return render(request, 'students/student_create.html', context)
 
 
-class StudentUpdateView(generic.UpdateView):
+class StudentUpdateView(LoginRequiredMixin, generic.UpdateView):
     template_name = 'students/student_update.html'
     form_class = StudentModelForm
     queryset = Student.objects.all()
@@ -109,7 +109,7 @@ def student_update(request, pk):
     return render(request, 'students/student_update.html', context)
 
 
-class StudentDeleteView(generic.DeleteView):
+class StudentDeleteView(LoginRequiredMixin, generic.DeleteView):
     template_name = 'students/student_delete.html'
     queryset = Student.objects.all()
 

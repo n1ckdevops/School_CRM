@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <a href="{% url 'students:student-list' %}">Go back to students</a>
+    <a href="{% url 'teachers:teacher-list' %}">Go back to teachers</a>
     <hr />
-    <h1>Create a new student</h1>
+    <h1>Create a new teacher</h1>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}

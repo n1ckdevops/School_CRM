@@ -5,7 +5,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import StudentModelForm, CustomUserCreationForm
 from .models import Student
 
-
 # CRUD+L - CREATE, RETRIEVE, UPDATE AND DELETE + LIST
 
 class SignupView(generic.CreateView):

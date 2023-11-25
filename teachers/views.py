@@ -34,3 +34,26 @@ class TeacherDetailView(LoginRequiredMixin, generic.DetailView):
     def get_queryset(self):
         return Teacher.objects.all()
 
+class TeacherUpdateView(LoginRequiredMixin, generic.UpdateView):
+    template_name = 'teachers/teacher_update.html'
+    form_class = TeacherModelForm
+    queryset = Teacher.objects.all()
+
+    def get_success_url(self):
+        return reverse('teachers:teacher-list')
+
+    def get_queryset(self):
+        return Teacher.objects.all()
+
+
+class TeacherDeleteView(LoginRequiredMixin, generic.DeleteView):
+    template_name = 'teachers/teacher_delete.html'
+    context_object_name = 'teacher'
+
+
+    def get_success_url(self):
+        return reverse('teachers:teacher-list')
+
+    def get_queryset(self):
+        return Teacher.objects.all()
+

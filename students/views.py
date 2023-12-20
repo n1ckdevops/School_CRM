@@ -1,7 +1,10 @@
+from typing import Any
 from django.core.mail import send_mail
+from django.db.models.query import QuerySet
 from django.shortcuts import render, redirect, reverse
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
+from teachers.mixins import OrganisorAndLoginRequiredMixin
 from .forms import StudentModelForm, CustomUserCreationForm
 from .models import Student
 
@@ -25,9 +28,20 @@ def landing_page(request):
 
 class StudentListView(LoginRequiredMixin, generic.ListView):
     template_name = 'students/student_list.html'
-    queryset = Student.objects.all()
     context_object_name = 'students'
 
+    def get_queryset(self):
+        # check the request user
+        user = self.request.user
+        # checking if the user is organiser
+        if user.is_organisor:
+            # if he is - then they will have a user profile
+            queryset = Student.objects.filter(organisation=user.userprofile)
+        else:
+            queryset = Student.objects.filter(organisation=user.teacher.organisation)
+            # filter for the agent that is logged in
+            queryset = queryset.filter(teacher__user=user)
+        return queryset
 
 def student_list(request):
     students = Student.objects.all()
@@ -39,8 +53,20 @@ def student_list(request):
 
 class StudentDetailView(LoginRequiredMixin, generic.DetailView):
     template_name = 'students/student_detail.html'
-    queryset = Student.objects.all()
     context_object_name = 'student'
+
+    def get_queryset(self):
+        # check the request user
+        user = self.request.user
+        # checking if the user is organiser
+        if user.is_organisor:
+            # if he is - then they will have a user profile
+            queryset = Student.objects.filter(organisation=user.userprofile)
+        else:
+            queryset = Student.objects.filter(organisation=user.teacher.organisation)
+            # filter for the agent that is logged in
+            queryset = queryset.filter(teacher__user=user)
+        return queryset
 
 
 def student_detail(request, pk):
@@ -52,7 +78,7 @@ def student_detail(request, pk):
     return render(request, 'students/student_detail.html', context)
 
 
-class StudentCreateView(LoginRequiredMixin, generic.CreateView):
+class StudentCreateView(OrganisorAndLoginRequiredMixin, generic.CreateView):
     template_name = 'students/student_create.html'
     form_class = StudentModelForm
 
@@ -84,10 +110,15 @@ def student_create(request):
     return render(request, 'students/student_create.html', context)
 
 
-class StudentUpdateView(LoginRequiredMixin, generic.UpdateView):
+class StudentUpdateView(OrganisorAndLoginRequiredMixin, generic.UpdateView):
     template_name = 'students/student_update.html'
     form_class = StudentModelForm
-    queryset = Student.objects.all()
+
+    def get_queryset(self):
+        user = self.request.user
+        # initial queryset of leads for the entire organisation
+        return Student.objects.filter(organisation=user.userprofile)
+
 
     def get_success_url(self):
         return reverse('students:student-list')
@@ -108,9 +139,15 @@ def student_update(request, pk):
     return render(request, 'students/student_update.html', context)
 
 
-class StudentDeleteView(LoginRequiredMixin, generic.DeleteView):
+class StudentDeleteView(OrganisorAndLoginRequiredMixin, generic.DeleteView):
     template_name = 'students/student_delete.html'
-    queryset = Student.objects.all()
+
+
+    def get_queryset(self):
+        user = self.request.user
+        # initial queryset of leads for the entire organisation
+        return Student.objects.filter(organisation=user.userprofile)
+
 
     def get_success_url(self):
         return reverse('students:student-list')
@@ -120,51 +157,3 @@ def student_delete(request, pk):
     student = Student.objects.get(id=pk)
     student.delete()
     return redirect('/students')
-
-# def student_update(request, pk):
-#     student = Student.objects.get(id=pk)
-#     form = StudentForm()
-#     if request.method == 'POST':
-#         print("Receiving a post method")
-#         form = StudentForm(request.POST)
-#         if form.is_valid():
-#             first_name = form.cleaned_data['first_name']
-#             last_name = form.cleaned_data['last_name']
-#             age = form.cleaned_data['age']
-#             student.first_name = first_name
-#             student.last_name = last_name
-#             student.age = age
-#             student.save()
-#             print('Student has been created!')
-#             return redirect('/students')
-#     context = {
-#         'student': student,
-#         'form': form,
-#
-#     }
-#     return render(request, 'students/student_update.html', context)
-
-# def student_create(request):
-#     form = StudentModelForm()
-#     if request.method == 'POST':
-#         print("Receiving a post method")
-#         form = StudentModelForm(request.POST)
-#         if form.is_valid():
-#             print('the form is valid')
-#             print(form.cleaned_data)
-#             first_name = form.cleaned_data['first_name']
-#             last_name = form.cleaned_data['last_name']
-#             age = form.cleaned_data['age']
-#             teacher = Teacher.objects.first()
-#             Student.objects.create(
-#                 first_name=first_name,
-#                 last_name=last_name,
-#                 age=age,
-#                 teacher=teacher
-#             )
-#             print('Student has been created!')
-#             return redirect('/students')
-#     context = {
-#         'form': form,
-#     }
-#     return render(request, 'students/student_create.html', context)

@@ -10,7 +10,9 @@
       {% if not request.user.is_authenticated %}
       <a href="{% url 'signup' %}" class="mr-5 hover:text-gray-900">Sign Up</a>
       {% else %}
+      {% if request.user.is_organisor %}
       <a href="{% url 'teachers:teacher-list' %}" class="mr-5 hover:text-gray-900">Teachers</a>
+      {% endif %}
       <a href="{% url 'students:student-list' %}" class="mr-5 hover:text-gray-900">Students</a>
       {% endif %}
     </nav>

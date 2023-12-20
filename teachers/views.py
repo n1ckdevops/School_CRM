@@ -3,18 +3,20 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import reverse
 from students.models import Teacher
 from .forms import TeacherModelForm
+from .mixins import OrganisorAndLoginRequiredMixin
 
 
-class TeacherListView(LoginRequiredMixin, generic.ListView):
+class TeacherListView(OrganisorAndLoginRequiredMixin, generic.ListView):
     template_name = 'teachers/teacher_list.html'
 
 
     def get_queryset(self):
-        return Teacher.objects.all()
+        organisation = self.request.user.userprofile
+        return Teacher.objects.filter(organisation=organisation)
 
 
 
-class TeacherCreateView(LoginRequiredMixin, generic.CreateView):
+class TeacherCreateView(OrganisorAndLoginRequiredMixin, generic.CreateView):
     template_name = 'teachers/teacher_create.html'
     form_class = TeacherModelForm
 
@@ -28,13 +30,16 @@ class TeacherCreateView(LoginRequiredMixin, generic.CreateView):
         return super(TeacherCreateView, self).form_valid(form)
 
 
-class TeacherDetailView(LoginRequiredMixin, generic.DetailView):
+
+
+class TeacherDetailView(OrganisorAndLoginRequiredMixin, generic.DetailView):
     template_name = 'teachers/teacher_detail.html'
     context_object_name = 'teacher'
     def get_queryset(self):
-        return Teacher.objects.all()
+        organisation = self.request.user.userprofile
+        return Teacher.objects.filter(organisation=organisation)
 
-class TeacherUpdateView(LoginRequiredMixin, generic.UpdateView):
+class TeacherUpdateView(OrganisorAndLoginRequiredMixin, generic.UpdateView):
     template_name = 'teachers/teacher_update.html'
     form_class = TeacherModelForm
     queryset = Teacher.objects.all()
@@ -46,7 +51,7 @@ class TeacherUpdateView(LoginRequiredMixin, generic.UpdateView):
         return Teacher.objects.all()
 
 
-class TeacherDeleteView(LoginRequiredMixin, generic.DeleteView):
+class TeacherDeleteView(OrganisorAndLoginRequiredMixin, generic.DeleteView):
     template_name = 'teachers/teacher_delete.html'
     context_object_name = 'teacher'
 
@@ -55,5 +60,6 @@ class TeacherDeleteView(LoginRequiredMixin, generic.DeleteView):
         return reverse('teachers:teacher-list')
 
     def get_queryset(self):
-        return Teacher.objects.all()
+        organisation = self.request.user.userprofile
+        return Teacher.objects.filter(organisation=organisation)
 

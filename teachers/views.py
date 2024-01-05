@@ -1,4 +1,6 @@
+import random 
 from django.views import generic
+from django.core.mail import send_mail
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import reverse
 from students.models import Teacher
@@ -24,9 +26,21 @@ class TeacherCreateView(OrganisorAndLoginRequiredMixin, generic.CreateView):
         return reverse('teachers:teacher-list')
 
     def form_valid(self, form):
-        teacher = form.save(commit=False)
-        teacher.organisation =  self.request.user.userprofile
-        teacher.save()
+        user = form.save(commit=False)
+        user.is_agent = True
+        user.is_organisor = False
+        user.set_password(f'{random.randint(0, 1000000)}')
+        user.save()
+        Teacher.objects.create(
+            user=user,
+            organisation=self.request.user.userprofile  
+        )
+        send_mail(
+            subject = 'You are invited to be an agent!',
+            message = 'You were added as an agent on SchoolCRM. Please come login to start working.',
+            from_email = "admin@test.com",
+            recipient_list = [user.email]  
+        )
         return super(TeacherCreateView, self).form_valid(form)
 
 
